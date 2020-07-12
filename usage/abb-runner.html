@@ -118,46 +118,33 @@ editing.</p>
     <span class="nt">zone_pick</span><span class="p">:</span> <span class="s">&#39;Fine&#39;</span> <span class="c1"># case doesn&#39;t matter here</span>
     <span class="nt">zone_place</span><span class="p">:</span> <span class="s">&#39;FINE&#39;</span>
     <span class="nt">zone_travel</span><span class="p">:</span> <span class="s">&#39;Z50&#39;</span>
+    <span class="nt">compress_at_pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.05</span> <span class="c1"># controls compression before lifting</span>
 <span class="nt">safe_joint_positions</span><span class="p">:</span> <span class="c1"># used at start and end of fabrication run</span>
     <span class="c1"># 6 joint values in degrees</span>
     <span class="nt">end</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span> <span class="p p-Indicator">,</span> <span class="nv">2.0</span> <span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
     <span class="nt">start</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span><span class="p p-Indicator">,</span> <span class="nv">-2.0</span><span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
 <span class="nt">speed_values</span><span class="p">:</span>
-    <span class="nt">speed_override</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %, optional, default 100</span>
+    <span class="nt">speed_override</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %</span>
+    <span class="nt">speed_max_tcp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500</span> <span class="c1"># mm/s</span>
     <span class="nt">accel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># mm/s^2</span>
     <span class="nt">accel_ramp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %, optional, default 100, the rate at which acceleration</span>
                     <span class="c1"># increases or decreases as a percentage of the normal values</span>
-    <span class="nt">speed_max_tcp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500</span> <span class="c1"># mm/s</span>
 <span class="nt">tool</span><span class="p">:</span>
     <span class="nt">io_needles_pin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doDNetOut1</span> <span class="c1"># name of DO</span>
     <span class="nt">tool_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_ClayTool01</span> <span class="c1"># name of tool</span>
     <span class="nt">grip_state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># state (0 or 1)</span>
     <span class="nt">release_state</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># state (0 or 1)</span>
-    <span class="nt">wait_before_io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># s, optional, default value 2</span>
-    <span class="nt">wait_after_io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># s, optional, default value 0.5</span>
-    <span class="nt">capacity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># number of bullets tool can pick up</span>
+    <span class="nt">wait_before_io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># s</span>
+    <span class="nt">wait_after_io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># s</span>
 <span class="nt">wobjs</span><span class="p">:</span>
     <span class="c1"># name of work objects as defined in controller</span>
-    <span class="nt">picking_wobj_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ob_A057_WobjPicking01</span>
+    <span class="nt">picking_wobj_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wobj0</span>
     <span class="nt">placing_wobj_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ob_A057_WobjPlacing01</span>
-<span class="nt">pick</span><span class="p">:</span>
-    <span class="nt">origin_grid</span><span class="p">:</span>  <span class="c1"># grid offset from wobj in mm</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">125</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">125</span>
-    <span class="nt">xnum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>  <span class="c1"># number of bullets in x direction</span>
-    <span class="nt">ynum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>  <span class="c1"># number of bullets in y direction</span>
-    <span class="nt">grid_spacing</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">125</span>  <span class="c1"># distance between grid crossings</span>
-    <span class="nt">compression_height_factor</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.95</span> <span class="c1"># controls compression before lifting</span>
-    <span class="nt">xaxis</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span> <span class="c1"># x axis as a list</span>
-    <span class="nt">yaxis</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span> <span class="c1"># y axis as a list</span>
 <span class="nt">docker</span><span class="p">:</span>
     <span class="nt">timeout_ping</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
     <span class="nt">sleep_after_up</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="nt">paths</span><span class="p">:</span>
-    <span class="nt">json_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\01_fabrication_data_jsons</span>
-    <span class="nt">conf_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\02_fabrication_confs</span>
     <span class="nt">log_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\03_fabrication_logs</span>
-    <span class="nt">pick_conf_dir</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\05_picking_confs</span>
 </code></pre></div>
 </div>
 </div>
@@ -375,7 +362,7 @@ the flexpendant:</p>
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev18+gecced62',
+  VERSION           : '0.3.1.dev28+g3a13e4a',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
