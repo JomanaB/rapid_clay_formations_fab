@@ -200,32 +200,45 @@
     <span class="k">return</span> <span class="n">M</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
+<span class="k">def</span> <span class="nf">_test_functions</span><span class="p">():</span>
     <span class="c1"># rgpoint_to_cgpoint</span>
     <span class="n">pt</span> <span class="o">=</span> <span class="n">rgpoint_to_cgpoint</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">pt</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">pt</span><span class="o">.</span><span class="n">data</span> <span class="o">!=</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;rgpoint_to_cgpoint failed&quot;</span><span class="p">)</span>
 
     <span class="c1"># rgvector_to_cgvector</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">rgvector_to_cgvector</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mf">3.7</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mf">3.8</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mf">3.7</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mf">3.8</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;rgvector_to_cgvector failed&quot;</span><span class="p">)</span>
 
     <span class="c1"># rgline_cgline</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">rgline_to_cgline</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">rg</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">midpoint</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">midpoint</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;rgline_to_cgline failed&quot;</span><span class="p">)</span>
 
     <span class="c1"># rgplane_to_cgframe</span>
     <span class="n">frame</span> <span class="o">=</span> <span class="n">rgplane_to_cgframe</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rg</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-    <span class="n">frame</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="fm">__repr__</span> <span class="o">==</span> <span class="s2">&quot;Quaternion(0.713799, 0.462707, 0.285969, 0.441152)&quot;</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="fm">__repr__</span>
+        <span class="o">!=</span> <span class="s2">&quot;Quaternion(0.713799, 0.462707, 0.285969, 0.441152)&quot;</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;rgplane_to_cgframe failed&quot;</span><span class="p">)</span>
 
     <span class="c1"># rgtransform_to_matrix</span>
     <span class="n">matrix</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">ZeroTransformation</span>
-    <span class="k">assert</span> <span class="n">rgtransform_to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span>
+
+    <span class="n">zero_matrix</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
     <span class="p">]</span>
+    <span class="k">if</span> <span class="n">rgtransform_to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span> <span class="o">!=</span> <span class="n">zero_matrix</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;rgtransform_to_matrix failed.&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">_test_functions</span><span class="p">()</span>
 </code></pre></div>
         
       </main>
@@ -302,7 +315,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev30+g157db23',
+  VERSION           : '0.3.1.dev35+g81c5459',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
