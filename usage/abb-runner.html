@@ -107,50 +107,53 @@ editing.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><code><span></span><span class="c1"># Fabrication run config for abb_rcf_runner</span>
 <span class="c1"># YAML format, https://yaml.org/spec/1.2</span>
 <span class="c1"># All values are required unless marked optional</span>
-<span class="nt">robot_movement</span><span class="p">:</span>
-    <span class="nt">speed_override</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %</span>
-    <span class="nt">speed_max_tcp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500</span> <span class="c1"># mm/s</span>
-    <span class="nt">accel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># mm/s^2</span>
-    <span class="nt">accel_ramp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %, optional, default 100, the rate at which acceleration</span>
-                    <span class="c1"># increases or decreases as a percentage of the normal values</span>
-    <span class="nt">offset_distance</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">200</span> <span class="c1"># mm, last frame before placing picking is offset by</span>
-                         <span class="c1"># this distance</span>
-    <span class="c1"># velocities defined as mm/s</span>
-    <span class="nt">speed_placing</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">150</span> <span class="c1"># mm/s</span>
-    <span class="nt">speed_picking</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">150</span> <span class="c1"># mm/s</span>
-    <span class="nt">speed_travel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">250</span> <span class="c1"># mm/s</span>
-    <span class="c1"># Either rapid variable name or mm</span>
-    <span class="nt">zone_pick</span><span class="p">:</span> <span class="s">&#39;Fine&#39;</span> <span class="c1"># case doesn&#39;t matter here</span>
-    <span class="nt">zone_place</span><span class="p">:</span> <span class="s">&#39;FINE&#39;</span>
-    <span class="nt">zone_travel</span><span class="p">:</span> <span class="s">&#39;Z150&#39;</span>
-    <span class="nt">compress_at_pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.05</span> <span class="c1"># controls compression before lifting</span>
-    <span class="nt">needles_pause</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># Seconds to wait before and after extending or</span>
-                       <span class="c1"># retracting needles</span>
-<span class="nt">robot_joint_pos</span><span class="p">:</span> <span class="c1"># used at start and end of fabrication run</span>
-    <span class="c1"># 6 joint values in degrees</span>
-    <span class="nt">end</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span> <span class="p p-Indicator">,</span> <span class="nv">2.0</span> <span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
-    <span class="nt">start</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span><span class="p p-Indicator">,</span> <span class="nv">-2.0</span><span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
-<span class="nt">tools</span><span class="p">:</span>
-    <span class="nt">pick_place</span><span class="p">:</span>
-        <span class="nt">tool_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_ClayTool01</span> <span class="c1"># name of tool</span>
-        <span class="nt">io_needles_pin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doDNetOut1</span> <span class="c1"># name of DO</span>
-        <span class="nt">extend_signal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># state (0 or 1)</span>
-        <span class="nt">retract_signal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># state (0 or 1)</span>
-        <span class="nt">tool0_z_dist</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">400</span>
-    <span class="nt">dist_sensor</span><span class="p">:</span>
-        <span class="nt">tool_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_DistSensor01</span> <span class="c1"># name of tool</span>
-        <span class="nt">serial_port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">COM1</span>
-        <span class="nt">serial_baudrate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">115200</span>
-        <span class="nt">tool0_z_dist</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">300</span>
-<span class="nt">wobjs</span><span class="p">:</span>
-    <span class="c1"># name of work objects as defined in controller</span>
-    <span class="nt">picking_wobj_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wobj0</span>
-    <span class="nt">placing_wobj_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ob_A057_WobjPlacing01</span>
-<span class="nt">docker</span><span class="p">:</span>
-    <span class="nt">timeout_ping</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-    <span class="nt">sleep_after_up</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="nt">paths</span><span class="p">:</span>
-    <span class="nt">log_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\03_fabrication_logs</span>
+<span class="nt">log_dir</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">G:\Shared drives\2020_MAS\T3\RCF-T3-Thesis\09-robot-control\03_fabrication_logs</span>
+<span class="nt">verbose</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># 1 means INFO messages, 2 DEBUG messages</span>
+<span class="nt">robot_client</span><span class="p">:</span>
+    <span class="nt">controller</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">virtual</span>
+    <span class="nt">docker</span><span class="p">:</span>
+        <span class="nt">timeout_ping</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+        <span class="nt">sleep_after_up</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">wobjs</span><span class="p">:</span>
+        <span class="nt">pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wobj0</span>
+        <span class="nt">place</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ob_A057_WobjPlacing01</span>
+
+    <span class="nt">tools</span><span class="p">:</span>
+        <span class="nt">pick_place</span><span class="p">:</span>
+            <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_ClayTool01</span> <span class="c1"># name of tool</span>
+            <span class="nt">io_pin_needles</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doDNetOut1</span> <span class="c1"># name of DO</span>
+            <span class="nt">extend_signal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># state (0 or 1)</span>
+            <span class="nt">retract_signal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># state (0 or 1)</span>
+            <span class="nt">needles_pause</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># Seconds to wait before and after extending or</span>
+                               <span class="c1"># retracting needles</span>
+            <span class="nt">compress_at_pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.05</span> <span class="c1"># controls compression before lifting</span>
+
+        <span class="nt">dist_sensor</span><span class="p">:</span>
+            <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_DistSensor01</span> <span class="c1"># name of tool</span>
+            <span class="c1"># serial_port: COM1 # Set when starting script</span>
+            <span class="nt">serial_baudrate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">115200</span>
+            <span class="nt">max_z_adjustment</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">300</span>
+
+    <span class="nt">robot_movement</span><span class="p">:</span>
+        <span class="nt">global_speed_accel</span><span class="p">:</span>
+            <span class="nt">speed_override</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %</span>
+            <span class="nt">speed_max_tcp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500</span> <span class="c1"># mm/s</span>
+            <span class="nt">accel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># mm/s^2</span>
+            <span class="nt">accel_ramp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># %, optional, default 100, the rate at which acceleration</span>
+                        <span class="c1"># increases or decreases as a percentage of the normal values</span>
+        <span class="nt">speed</span><span class="p">:</span>
+            <span class="c1"># velocities defined as mm/s</span>
+            <span class="nt">precise</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">150</span> <span class="c1"># mm/s</span>
+            <span class="nt">travel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">250</span> <span class="c1"># mm/s</span>
+
+        <span class="nt">zone</span><span class="p">:</span>
+            <span class="c1"># Either rapid variable name or mm</span>
+            <span class="nt">precise</span><span class="p">:</span> <span class="s">&#39;Fine&#39;</span> <span class="c1"># case doesn&#39;t matter here</span>
+            <span class="nt">travel</span><span class="p">:</span> <span class="s">&#39;Z150&#39;</span>
+
+        <span class="nt">set_joint_pos</span><span class="p">:</span> <span class="c1"># used at start and end of fabrication run</span>
+            <span class="nt">start</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span><span class="p p-Indicator">,</span> <span class="nv">-2.0</span><span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
+            <span class="nt">end</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">-127.0</span><span class="p p-Indicator">,</span> <span class="nv">54.0</span><span class="p p-Indicator">,</span> <span class="nv">9.0</span> <span class="p p-Indicator">,</span> <span class="nv">2.0</span> <span class="p p-Indicator">,</span> <span class="nv">30.0</span><span class="p p-Indicator">,</span> <span class="nv">7.0</span> <span class="p p-Indicator">]</span> <span class="c1"># 6 joint values in degrees</span>
 </code></pre></div>
 </div>
 </div>
@@ -368,7 +371,7 @@ the flexpendant:</p>
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev40+g2ff84b8',
+  VERSION           : '0.3.1.dev42+ge47e73c',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
