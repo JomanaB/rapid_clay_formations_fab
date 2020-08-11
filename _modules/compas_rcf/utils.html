@@ -91,6 +91,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
+<span class="kn">import</span> <span class="nn">compas</span>
 <span class="kn">import</span> <span class="nn">compas.geometry</span> <span class="k">as</span> <span class="nn">cg</span>
 <span class="kn">from</span> <span class="nn">compas</span> <span class="kn">import</span> <span class="n">raise_if_ironpython</span>
 
@@ -185,6 +186,22 @@
     <span class="n">T</span> <span class="o">=</span> <span class="n">cg</span><span class="o">.</span><span class="n">Translation</span><span class="p">(</span><span class="n">offset_vector</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">temp_change_compas_precision</span><span class="p">(</span><span class="n">precision</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapped_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">prev_precision</span> <span class="o">=</span> <span class="n">compas</span><span class="o">.</span><span class="n">PRECISION</span>
+            <span class="n">compas</span><span class="o">.</span><span class="n">PRECISION</span> <span class="o">=</span> <span class="n">precision</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="n">compas</span><span class="o">.</span><span class="n">PRECISION</span> <span class="o">=</span> <span class="n">prev_precision</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="n">wrapped_func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
 </code></pre></div>
         
       </main>
@@ -261,7 +278,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev44+g3e57784',
+  VERSION           : '0.3.1.dev50+g3476feb',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
