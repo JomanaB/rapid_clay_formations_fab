@@ -82,8 +82,6 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">import</span> <span class="nn">compas.geometry</span> <span class="k">as</span> <span class="nn">cg</span>
-
 <span class="kn">from</span> <span class="nn">compas_rcf.fab_data</span> <span class="kn">import</span> <span class="n">ClayBullet</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -180,21 +178,6 @@
                 <span class="n">csv_w</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ClayBulletEncoder"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBulletEncoder.html#compas_rcf.fab_data.ClayBulletEncoder">[docs]</a><span class="k">class</span> <span class="nc">ClayBulletEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;JSON encoder for :class:`ClayBullet`.</span>
-
-<span class="sd">    Implemented from https://docs.python.org/3/library/json.html#json.JSONEncoder</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="ClayBulletEncoder.default"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBulletEncoder.default.html#compas_rcf.fab_data.ClayBulletEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ClayBullet</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">cg</span><span class="o">.</span><span class="n">Primitive</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
-        <span class="c1"># Let the base class default method raise the TypeError</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div></div>
-
-
 <div class="viewcode-block" id="load_bullets"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.load_bullets.html#compas_rcf.fab_data.load_bullets">[docs]</a><span class="k">def</span> <span class="nf">load_bullets</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load fabrication data from JSON file.</span>
 
@@ -208,13 +191,16 @@
 <span class="sd">    :class:`list` of :class:`ClayBullet`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">json_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="n">run_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
 
-    <span class="n">clay_bullets</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">dict_</span> <span class="ow">in</span> <span class="n">json_string</span><span class="p">:</span>
-        <span class="n">clay_bullets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClayBullet</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">dict_</span><span class="p">))</span>
+    <span class="c1"># Accept either run_data file or fab_data file</span>
+    <span class="n">fab_data</span> <span class="o">=</span> <span class="n">run_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fab_data&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">run_data</span>
 
-    <span class="k">return</span> <span class="n">clay_bullets</span></div>
+    <span class="n">clay_cylinders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">fab_data</span><span class="p">:</span>
+        <span class="n">clay_cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClayBullet</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">clay_cylinders</span></div>
 </code></pre></div>
         
       </main>
@@ -291,7 +277,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev50+g3476feb',
+  VERSION           : '0.3.1.dev59+g03dc177',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
