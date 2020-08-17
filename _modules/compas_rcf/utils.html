@@ -170,26 +170,6 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_offset_frame"><a class="viewcode-back" href="../../reference/generated/compas_rcf.utils.get_offset_frame.html#compas_rcf.utils.get_offset_frame">[docs]</a><span class="k">def</span> <span class="nf">get_offset_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Offset a frame in its reverse Z axis direction.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    frame : :class:`compas.geometry.Frame`</span>
-<span class="sd">        Frame to offset.</span>
-<span class="sd">    distance : :class:`float`</span>
-<span class="sd">        Translation distance in mm.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    :class:`compas.geometry.Frame`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">offset_vector</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">zaxis</span> <span class="o">*</span> <span class="n">distance</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">cg</span><span class="o">.</span><span class="n">Translation</span><span class="p">(</span><span class="n">offset_vector</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
-
-
 <span class="k">def</span> <span class="nf">temp_change_compas_precision</span><span class="p">(</span><span class="n">precision</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">wrapped_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -295,7 +275,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev62+g04d5968',
+  VERSION           : '0.3.1.dev63+g10ee84d',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',

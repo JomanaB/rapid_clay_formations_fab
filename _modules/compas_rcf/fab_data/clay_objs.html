@@ -84,13 +84,11 @@
 
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span> <span class="k">as</span> <span class="n">cg_Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Frame</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Primitive</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Translation</span>
 <span class="kn">from</span> <span class="nn">compas_fab.robots</span> <span class="kn">import</span> <span class="n">JointTrajectory</span>
 <span class="kn">from</span> <span class="nn">compas_ghpython.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
-<span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">ensure_frame</span>
-<span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">get_offset_frame</span>
+<span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reverse_trajectory</span>
 <span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">wrap_list</span>
 
 
@@ -132,16 +130,14 @@
 <div class="viewcode-block" id="ClayBullet.__init__"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.__init__.html#compas_rcf.fab_data.ClayBullet.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">location</span><span class="p">,</span>
-        <span class="n">egress_frame_distance</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-        <span class="n">trajectory_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_from</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">egress_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">uncompressed_top_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">compressed_top_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">bullet_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">radius</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">compression_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">egress_frame_distance</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">trajectory_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">trajectory_egress_to_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">trajectory_top_to_compressed_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">bullet_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">clay_density</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
         <span class="n">cycle_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">placed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -152,24 +148,20 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Location should be given as a compas.geometry.Frame&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_to</span> <span class="o">=</span> <span class="n">trajectory_to</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_from</span> <span class="o">=</span> <span class="n">trajectory_from</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression_ratio</span> <span class="o">=</span> <span class="n">compression_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">egress_frame_distance</span> <span class="o">=</span> <span class="n">egress_frame_distance</span>
 
-        <span class="c1"># Path planned configurations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">egress_conf</span> <span class="o">=</span> <span class="n">egress_conf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uncompressed_top_conf</span> <span class="o">=</span> <span class="n">uncompressed_top_conf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compressed_top_conf</span> <span class="o">=</span> <span class="n">compressed_top_conf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_to</span> <span class="o">=</span> <span class="n">trajectory_to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_egress_to_top</span> <span class="o">=</span> <span class="n">trajectory_egress_to_top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_compressed_top</span> <span class="o">=</span> <span class="n">trajectory_top_to_compressed_top</span>
 
         <span class="c1"># sortable ID, used for fabrication sequence</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bullet_id</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bullet_id</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ids</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bullet_id</span> <span class="o">=</span> <span class="n">bullet_id</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compression_ratio</span> <span class="o">=</span> <span class="n">compression_ratio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">egress_frame_distance</span> <span class="o">=</span> <span class="n">egress_frame_distance</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clay_density</span> <span class="o">=</span> <span class="n">clay_density</span>
 
@@ -179,105 +171,184 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory_from</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="k">return</span> <span class="n">reverse_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_to</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory_egress_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_egress_to_top</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_egress_to_top</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_egress_frame</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_uncompressed_top_frame</span><span class="p">()]</span>
+
+    <span class="nd">@trajectory_egress_to_top</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">trajectory_egress_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_egress_to_top</span> <span class="o">=</span> <span class="n">trajectory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory_top_to_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="k">return</span> <span class="n">reverse_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_egress_to_top</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory_top_to_compressed_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_compressed_top</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_compressed_top</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_top_frame</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_uncompressed_top_frame</span><span class="p">()]</span>
+
+    <span class="nd">@trajectory_top_to_compressed_top</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">trajectory_top_to_compressed_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_compressed_top</span> <span class="o">=</span> <span class="n">trajectory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trajectory_compressed_top_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="k">return</span> <span class="n">reverse_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_compressed_top</span><span class="p">)</span>
+
 <div class="viewcode-block" id="ClayBullet.get_location_plane"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_location_plane.html#compas_rcf.fab_data.ClayBullet.get_location_plane">[docs]</a>    <span class="k">def</span> <span class="nf">get_location_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get location as Rhino.Geometry.Plane.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Rhino.Geometry.Plane`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">compas_rcf.rhino</span> <span class="kn">import</span> <span class="n">cgframe_to_rgplane</span>
 
         <span class="k">return</span> <span class="n">cgframe_to_rgplane</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_normal"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_normal.html#compas_rcf.fab_data.ClayBullet.get_normal">[docs]</a>    <span class="k">def</span> <span class="nf">get_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get normal direction of cylinder.</span>
+
+<span class="sd">        Actually the reverse of the location frame&#39;s normal as it&#39;s used as a</span>
+<span class="sd">        robot target frame and thus pointing &quot;down&quot;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Vector`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">normal</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_uncompressed_top_frame"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_uncompressed_top_frame.html#compas_rcf.fab_data.ClayBullet.get_uncompressed_top_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_uncompressed_top_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas.geometry.frame` Top of uncompressed cylinder.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Top of uncompressed cylinder.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Frame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_compressed_top_frame"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_compressed_top_frame.html#compas_rcf.fab_data.ClayBullet.get_compressed_top_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_compressed_top_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas.geometry.frame` Top of compressed cylinder.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Top of compressed cylinder.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Frame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_height</span><span class="p">()</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_egress_frame"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_egress_frame.html#compas_rcf.fab_data.ClayBullet.get_egress_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_egress_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Frame at end and start of trajectory to and from.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get Frame at end and start of trajectory to and from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Frame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">egress_frame_distance</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_uncompressed_top_frame</span><span class="p">()</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_uncompressed_centroid_frame"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_uncompressed_centroid_frame.html#compas_rcf.fab_data.ClayBullet.get_uncompressed_centroid_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_uncompressed_centroid_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get frame at middle of uncompressed bullet.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get frame at middle of uncompressed bullet.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Frame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_compressed_centroid_frame"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_compressed_centroid_frame.html#compas_rcf.fab_data.ClayBullet.get_compressed_centroid_frame">[docs]</a>    <span class="k">def</span> <span class="nf">get_compressed_centroid_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get frame at middle of compressed bullet.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get frame at middle of compressed bullet.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas.geometry.Frame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_volume"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_volume.html#compas_rcf.fab_data.ClayBullet.get_volume">[docs]</a>    <span class="k">def</span> <span class="nf">get_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Volume of clay bullet in mm\ :sup:`3`\ .</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get volume of clay bullet in mm\ :sup:`3`\ .</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_volume_m3"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_volume_m3.html#compas_rcf.fab_data.ClayBullet.get_volume_m3">[docs]</a>    <span class="k">def</span> <span class="nf">get_volume_m3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Volume of clay bullet in m\ :sup:`3`\ .</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get volume of clay bullet in m\ :sup:`3`\ .</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">*</span> <span class="mf">1e-9</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_weight_kg"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_weight_kg.html#compas_rcf.fab_data.ClayBullet.get_weight_kg">[docs]</a>    <span class="k">def</span> <span class="nf">get_weight_kg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Weight of clay bullet in kg.</span>
+        <span class="sd">&quot;&quot;&quot;Get weight of clay bullet in kg.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">*</span> <span class="mf">1e-6</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_weight"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_weight.html#compas_rcf.fab_data.ClayBullet.get_weight">[docs]</a>    <span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Weight of clay bullet in g.</span>
+        <span class="sd">&quot;&quot;&quot;Get weight of clay bullet in g.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_kg</span> <span class="o">*</span> <span class="mi">1000</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_compressed_radius"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_compressed_radius.html#compas_rcf.fab_data.ClayBullet.get_compressed_radius">[docs]</a>    <span class="k">def</span> <span class="nf">get_compressed_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Radius of clay bullet in mm when compressed to defined compression ratio.</span>
+        <span class="sd">&quot;&quot;&quot;Get radius of clay bullet in mm when compressed to defined compression ratio.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_height</span><span class="p">()</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_compressed_height"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_compressed_height.html#compas_rcf.fab_data.ClayBullet.get_compressed_height">[docs]</a>    <span class="k">def</span> <span class="nf">get_compressed_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Height of clay bullet in mm when compressed to defined compression ratio.</span>
+        <span class="sd">&quot;&quot;&quot;Get height of clay bullet in mm when compressed to defined compression ratio.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        float</span>
+<span class="sd">        :obj:`float`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_ratio</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_rgcircle"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_rgcircle.html#compas_rcf.fab_data.ClayBullet.get_rgcircle">[docs]</a>    <span class="k">def</span> <span class="nf">get_rgcircle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`Rhino.Geometry.Circle` representing bullet footprint.</span>
+        <span class="sd">&quot;&quot;&quot;Get :class:`Rhino.Geometry.Circle` representing bullet footprint.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -288,7 +359,7 @@
         <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_location_plane</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_radius</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="ClayBullet.get_rgcylinder"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_rgcylinder.html#compas_rcf.fab_data.ClayBullet.get_rgcylinder">[docs]</a>    <span class="k">def</span> <span class="nf">get_rgcylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`Rhino.Geometry.Cylinder` representing bullet.</span>
+        <span class="sd">&quot;&quot;&quot;Get :class:`Rhino.Geometry.Cylinder` representing bullet.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -308,9 +379,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compressed_height</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ClayBullet.copy"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.copy.html#compas_rcf.fab_data.ClayBullet.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a copy of instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`compas_rcf.fab_data.ClayBullet`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ClayBullet.get_rgmesh"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_rgmesh.html#compas_rcf.fab_data.ClayBullet.get_rgmesh">[docs]</a>    <span class="k">def</span> <span class="nf">get_rgmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face_count</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
+<div class="viewcode-block" id="ClayBullet.get_cgmesh"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_cgmesh.html#compas_rcf.fab_data.ClayBullet.get_cgmesh">[docs]</a>    <span class="k">def</span> <span class="nf">get_cgmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face_count</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate mesh representation of bullet with custom resolution.</span>
 
 <span class="sd">        Parameters</span>
@@ -323,6 +400,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`Rhino.Geometry.Mesh`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Rewrite as pure compas</span>
         <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 
         <span class="kn">from</span> <span class="nn">compas_rcf.rhino</span> <span class="kn">import</span> <span class="n">cgvector_to_rgvector</span>
@@ -388,6 +466,22 @@
             <span class="n">mirror_corners_2</span> <span class="o">=</span> <span class="n">wrap_list</span><span class="p">(</span><span class="n">vertex_for_vertex</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">mesh</span><span class="o">.</span><span class="n">add_face</span><span class="p">(</span><span class="n">mirror_corners_1</span> <span class="o">+</span> <span class="n">mirror_corners_2</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
+        <span class="k">return</span> <span class="n">mesh</span></div>
+
+<div class="viewcode-block" id="ClayBullet.get_rgmesh"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_rgmesh.html#compas_rcf.fab_data.ClayBullet.get_rgmesh">[docs]</a>    <span class="k">def</span> <span class="nf">get_rgmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face_count</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate mesh representation of bullet with custom resolution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        face_count : :class:`int`, optional</span>
+<span class="sd">            Desired number of faces, by default 18</span>
+<span class="sd">            Used as a guide for the resolution of the mesh cylinder</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Rhino.Geometry.Mesh`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cgmesh</span><span class="p">(</span><span class="n">face_count</span><span class="o">=</span><span class="n">face_count</span><span class="p">)</span>
         <span class="c1"># to Rhino.Geometry and clean it up</span>
         <span class="n">rgmesh</span> <span class="o">=</span> <span class="n">MeshArtist</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span><span class="o">.</span><span class="n">draw_mesh</span><span class="p">()</span>
         <span class="n">rgmesh</span><span class="o">.</span><span class="n">UnifyNormals</span><span class="p">()</span>
@@ -396,12 +490,13 @@
         <span class="k">return</span> <span class="n">rgmesh</span></div>
 
 <div class="viewcode-block" id="ClayBullet.to_data"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.to_data.html#compas_rcf.fab_data.ClayBullet.to_data">[docs]</a>    <span class="k">def</span> <span class="nf">to_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get :obj:`dict` representation of :class:`ClayBullet`.&quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Primitive</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">return</span> <span class="n">data</span></div>
@@ -420,33 +515,29 @@
 <span class="sd">        :class:`ClayBullet`</span>
 <span class="sd">            The constructed ClayBullet instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">trajectory_from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">traj_data</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">JointTrajectory</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">Frame</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">frame_data</span><span class="p">)</span> <span class="k">for</span> <span class="n">frame_data</span> <span class="ow">in</span> <span class="n">traj_data</span><span class="p">]</span>
+
         <span class="n">location</span> <span class="o">=</span> <span class="n">Frame</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">))</span>
 
-        <span class="n">_trajectory_to</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trajectory_to&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">trajectory_to_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trajectory_to&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">trajectory_to</span> <span class="o">=</span> <span class="n">trajectory_from_data</span><span class="p">(</span><span class="n">trajectory_to_data</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">_trajectory_to</span><span class="p">:</span>
-            <span class="c1"># Check if obj is JointTrajectory</span>
-            <span class="k">if</span> <span class="n">_trajectory_to</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_configuration&quot;</span><span class="p">):</span>
-                <span class="n">trajectory_to</span> <span class="o">=</span> <span class="n">JointTrajectory</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">_trajectory_to</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">trajectory_to</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">frame_data</span> <span class="ow">in</span> <span class="n">_trajectory_to</span><span class="p">:</span>
-                    <span class="n">trajectory_to</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Frame</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">frame_data</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">trajectory_to</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">trajectory_egress_to_top_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_trajectory_egress_to_top&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">trajectory_egress_to_top</span> <span class="o">=</span> <span class="n">trajectory_from_data</span><span class="p">(</span><span class="n">trajectory_egress_to_top_data</span><span class="p">)</span>
 
-        <span class="n">_trajectory_from</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trajectory_from&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">_trajectory_from</span><span class="p">:</span>
-            <span class="c1"># Check if obj is JointTrajectory</span>
-            <span class="k">if</span> <span class="n">_trajectory_from</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_configuration&quot;</span><span class="p">):</span>
-                <span class="n">trajectory_from</span> <span class="o">=</span> <span class="n">JointTrajectory</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">_trajectory_from</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">trajectory_from</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">frame_data</span> <span class="ow">in</span> <span class="n">_trajectory_from</span><span class="p">:</span>
-                    <span class="n">trajectory_from</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Frame</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">frame_data</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">trajectory_from</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">trajectory_top_to_compressed_top_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+            <span class="s2">&quot;_trajectory_top_to_compressed_top&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">trajectory_top_to_compressed_top</span> <span class="o">=</span> <span class="n">trajectory_from_data</span><span class="p">(</span>
+            <span class="n">trajectory_top_to_compressed_top_data</span>
+        <span class="p">)</span>
 
         <span class="c1"># To check for old attr name for id</span>
         <span class="k">if</span> <span class="s2">&quot;bullet_id&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -456,45 +547,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bullet_id</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># Take the rest of the dictionary</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">data</span>
-
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">location</span><span class="p">,</span>
             <span class="n">trajectory_to</span><span class="o">=</span><span class="n">trajectory_to</span><span class="p">,</span>
-            <span class="n">trajectory_from</span><span class="o">=</span><span class="n">trajectory_from</span><span class="p">,</span>
+            <span class="n">trajectory_egress_to_top</span><span class="o">=</span><span class="n">trajectory_egress_to_top</span><span class="p">,</span>
+            <span class="n">trajectory_top_to_compressed_top</span><span class="o">=</span><span class="n">trajectory_top_to_compressed_top</span><span class="p">,</span>
             <span class="n">bullet_id</span><span class="o">=</span><span class="n">bullet_id</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span></div>
-
-<div class="viewcode-block" id="ClayBullet.from_compressed_centroid_frame_like"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.from_compressed_centroid_frame_like.html#compas_rcf.fab_data.ClayBullet.from_compressed_centroid_frame_like">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_compressed_centroid_frame_like</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">centroid_frame_like</span><span class="p">,</span> <span class="n">compression_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Construct a :class:`ClayBullet` instance from centroid plane.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        centroid_frame_like : :class:`compas.geometry.Frame` or :class:`Rhino.Geometry.Plane`</span>
-<span class="sd">            Frame between bottom of clay bullet and compressed top.</span>
-<span class="sd">        compression_ratio : :class:`float`</span>
-<span class="sd">            The compressed height as a percentage of the original height.</span>
-<span class="sd">        height : :class:`float`</span>
-<span class="sd">            The height of the bullet before compression.</span>
-<span class="sd">        kwargs : :class:`dict`</span>
-<span class="sd">            Other attributes.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`ClayBullet`</span>
-<span class="sd">            The constructed ClayBullet instance</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="n">centroid_frame</span> <span class="o">=</span> <span class="n">ensure_frame</span><span class="p">(</span><span class="n">centroid_frame_like</span><span class="p">)</span>
-        <span class="n">compressed_height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">compression_ratio</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">get_offset_frame</span><span class="p">(</span><span class="n">centroid_frame</span><span class="p">,</span> <span class="o">-</span><span class="n">compressed_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">location</span><span class="p">,</span> <span class="n">compression_ratio</span><span class="o">=</span><span class="n">compression_ratio</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="o">**</span><span class="n">data</span>
         <span class="p">)</span></div></div>
 
 
@@ -597,7 +656,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev62+g04d5968',
+  VERSION           : '0.3.1.dev63+g10ee84d',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',

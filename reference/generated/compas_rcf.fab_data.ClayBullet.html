@@ -80,7 +80,7 @@
 <h1 class="display-4 p-0 mb-5">ClayBullet</h1>
 <dl class="py class">
 <dt id="compas_rcf.fab_data.ClayBullet">
-<em class="property">class </em><code class="sig-prename descclassname">compas_rcf.fab_data.</code><code class="sig-name descname">ClayBullet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">egress_frame_distance</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">trajectory_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_from</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">egress_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uncompressed_top_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">compressed_top_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bullet_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">45</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">compression_ratio</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">clay_density</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">cycle_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">placed</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_rcf/fab_data/clay_objs.html#ClayBullet"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_rcf.fab_data.</code><code class="sig-name descname">ClayBullet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">45</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">compression_ratio</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">egress_frame_distance</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">trajectory_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_egress_to_top</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_top_to_compressed_top</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bullet_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">clay_density</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">cycle_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">placed</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_rcf/fab_data/clay_objs.html#ClayBullet"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Describes a clay cylinder.</p>
 <dl class="field-list simple">
@@ -102,6 +102,39 @@ if key already present.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trajectory_compressed_top_to_top</span></code></p></td>
+<td><p><a class="reference external" href="https://gramaziokohler.github.io/compas_fab/latest/reference/generated/compas_fab.robots.JointTrajectory.html#compas_fab.robots.JointTrajectory" title="(in COMPAS FAB v0.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fab.robots.JointTrajectory</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://compas.dev/compas/api/generated/compas.geometry.Frame.html#compas.geometry.Frame" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Frame</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trajectory_egress_to_top</span></code></p></td>
+<td><p><a class="reference external" href="https://gramaziokohler.github.io/compas_fab/latest/reference/generated/compas_fab.robots.JointTrajectory.html#compas_fab.robots.JointTrajectory" title="(in COMPAS FAB v0.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fab.robots.JointTrajectory</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://compas.dev/compas/api/generated/compas.geometry.Frame.html#compas.geometry.Frame" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Frame</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trajectory_from</span></code></p></td>
+<td><p><a class="reference external" href="https://gramaziokohler.github.io/compas_fab/latest/reference/generated/compas_fab.robots.JointTrajectory.html#compas_fab.robots.JointTrajectory" title="(in COMPAS FAB v0.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fab.robots.JointTrajectory</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://compas.dev/compas/api/generated/compas.geometry.Frame.html#compas.geometry.Frame" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Frame</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trajectory_top_to_compressed_top</span></code></p></td>
+<td><p><a class="reference external" href="https://gramaziokohler.github.io/compas_fab/latest/reference/generated/compas_fab.robots.JointTrajectory.html#compas_fab.robots.JointTrajectory" title="(in COMPAS FAB v0.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fab.robots.JointTrajectory</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://compas.dev/compas/api/generated/compas.geometry.Frame.html#compas.geometry.Frame" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Frame</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trajectory_top_to_egress</span></code></p></td>
+<td><p><a class="reference external" href="https://gramaziokohler.github.io/compas_fab/latest/reference/generated/compas_fab.robots.JointTrajectory.html#compas_fab.robots.JointTrajectory" title="(in COMPAS FAB v0.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fab.robots.JointTrajectory</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://compas.dev/compas/api/generated/compas.geometry.Frame.html#compas.geometry.Frame" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Frame</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -109,44 +142,44 @@ if key already present.</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.__init__.html#compas_rcf.fab_data.ClayBullet.__init__" title="compas_rcf.fab_data.ClayBullet.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(location[, egress_frame_distance, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.__init__.html#compas_rcf.fab_data.ClayBullet.__init__" title="compas_rcf.fab_data.ClayBullet.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(location[, radius, height, …])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.copy.html#compas_rcf.fab_data.ClayBullet.copy" title="compas_rcf.fab_data.ClayBullet.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get a copy of instance.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.from_compressed_centroid_frame_like.html#compas_rcf.fab_data.ClayBullet.from_compressed_centroid_frame_like" title="compas_rcf.fab_data.ClayBullet.from_compressed_centroid_frame_like"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_compressed_centroid_frame_like</span></code></a>(…[, …])</p></td>
-<td><p>Construct a <a class="reference internal" href="#compas_rcf.fab_data.ClayBullet" title="compas_rcf.fab_data.ClayBullet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClayBullet</span></code></a> instance from centroid plane.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.from_data.html#compas_rcf.fab_data.ClayBullet.from_data" title="compas_rcf.fab_data.ClayBullet.from_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_data</span></code></a>(data)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.from_data.html#compas_rcf.fab_data.ClayBullet.from_data" title="compas_rcf.fab_data.ClayBullet.from_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_data</span></code></a>(data)</p></td>
 <td><p>Construct a <a class="reference internal" href="#compas_rcf.fab_data.ClayBullet" title="compas_rcf.fab_data.ClayBullet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClayBullet</span></code></a> instance from its data representation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_cgmesh.html#compas_rcf.fab_data.ClayBullet.get_cgmesh" title="compas_rcf.fab_data.ClayBullet.get_cgmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cgmesh</span></code></a>([face_count])</p></td>
+<td><p>Generate mesh representation of bullet with custom resolution.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_compressed_centroid_frame.html#compas_rcf.fab_data.ClayBullet.get_compressed_centroid_frame" title="compas_rcf.fab_data.ClayBullet.get_compressed_centroid_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compressed_centroid_frame</span></code></a>()</p></td>
 <td><p>Get frame at middle of compressed bullet.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_compressed_height.html#compas_rcf.fab_data.ClayBullet.get_compressed_height" title="compas_rcf.fab_data.ClayBullet.get_compressed_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compressed_height</span></code></a>()</p></td>
-<td><p>Height of clay bullet in mm when compressed to defined compression ratio.</p></td>
+<td><p>Get height of clay bullet in mm when compressed to defined compression ratio.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_compressed_radius.html#compas_rcf.fab_data.ClayBullet.get_compressed_radius" title="compas_rcf.fab_data.ClayBullet.get_compressed_radius"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compressed_radius</span></code></a>()</p></td>
-<td><p>Radius of clay bullet in mm when compressed to defined compression ratio.</p></td>
+<td><p>Get radius of clay bullet in mm when compressed to defined compression ratio.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_compressed_top_frame.html#compas_rcf.fab_data.ClayBullet.get_compressed_top_frame" title="compas_rcf.fab_data.ClayBullet.get_compressed_top_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compressed_top_frame</span></code></a>()</p></td>
-<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.frame</span></code> Top of compressed cylinder.</p></td>
+<td><p>Top of compressed cylinder.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_egress_frame.html#compas_rcf.fab_data.ClayBullet.get_egress_frame" title="compas_rcf.fab_data.ClayBullet.get_egress_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_egress_frame</span></code></a>()</p></td>
-<td><p>Frame at end and start of trajectory to and from.</p></td>
+<td><p>Get Frame at end and start of trajectory to and from.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_location_plane.html#compas_rcf.fab_data.ClayBullet.get_location_plane" title="compas_rcf.fab_data.ClayBullet.get_location_plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_location_plane</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get location as Rhino.Geometry.Plane.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_normal.html#compas_rcf.fab_data.ClayBullet.get_normal" title="compas_rcf.fab_data.ClayBullet.get_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_normal</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get normal direction of cylinder.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_rgcircle.html#compas_rcf.fab_data.ClayBullet.get_rgcircle" title="compas_rcf.fab_data.ClayBullet.get_rgcircle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rgcircle</span></code></a>()</p></td>
-<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Rhino.Geometry.Circle</span></code> representing bullet footprint.</p></td>
+<td><p>Get <code class="xref py py-class docutils literal notranslate"><span class="pre">Rhino.Geometry.Circle</span></code> representing bullet footprint.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_rgcylinder.html#compas_rcf.fab_data.ClayBullet.get_rgcylinder" title="compas_rcf.fab_data.ClayBullet.get_rgcylinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rgcylinder</span></code></a>()</p></td>
-<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Rhino.Geometry.Cylinder</span></code> representing bullet.</p></td>
+<td><p>Get <code class="xref py py-class docutils literal notranslate"><span class="pre">Rhino.Geometry.Cylinder</span></code> representing bullet.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_rgmesh.html#compas_rcf.fab_data.ClayBullet.get_rgmesh" title="compas_rcf.fab_data.ClayBullet.get_rgmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rgmesh</span></code></a>([face_count])</p></td>
 <td><p>Generate mesh representation of bullet with custom resolution.</p></td>
@@ -158,22 +191,22 @@ if key already present.</p></li>
 <td><p>Get frame at middle of uncompressed bullet.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_uncompressed_top_frame.html#compas_rcf.fab_data.ClayBullet.get_uncompressed_top_frame" title="compas_rcf.fab_data.ClayBullet.get_uncompressed_top_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_uncompressed_top_frame</span></code></a>()</p></td>
-<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.frame</span></code> Top of uncompressed cylinder.</p></td>
+<td><p>Top of uncompressed cylinder.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_volume.html#compas_rcf.fab_data.ClayBullet.get_volume" title="compas_rcf.fab_data.ClayBullet.get_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_volume</span></code></a>()</p></td>
-<td><p>Volume of clay bullet in mm<sup>3</sup>.</p></td>
+<td><p>Get volume of clay bullet in mm<sup>3</sup>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_volume_m3.html#compas_rcf.fab_data.ClayBullet.get_volume_m3" title="compas_rcf.fab_data.ClayBullet.get_volume_m3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_volume_m3</span></code></a>()</p></td>
-<td><p>Volume of clay bullet in m<sup>3</sup>.</p></td>
+<td><p>Get volume of clay bullet in m<sup>3</sup>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_weight.html#compas_rcf.fab_data.ClayBullet.get_weight" title="compas_rcf.fab_data.ClayBullet.get_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight</span></code></a>()</p></td>
-<td><p>Weight of clay bullet in g.</p></td>
+<td><p>Get weight of clay bullet in g.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.get_weight_kg.html#compas_rcf.fab_data.ClayBullet.get_weight_kg" title="compas_rcf.fab_data.ClayBullet.get_weight_kg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight_kg</span></code></a>()</p></td>
-<td><p>Weight of clay bullet in kg.</p></td>
+<td><p>Get weight of clay bullet in kg.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_rcf.fab_data.ClayBullet.to_data.html#compas_rcf.fab_data.ClayBullet.to_data" title="compas_rcf.fab_data.ClayBullet.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a> representation of <a class="reference internal" href="#compas_rcf.fab_data.ClayBullet" title="compas_rcf.fab_data.ClayBullet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClayBullet</span></code></a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -188,7 +221,7 @@ if key already present.</p></li>
 </table>
 <dl class="py method">
 <dt id="compas_rcf.fab_data.ClayBullet.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">egress_frame_distance</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">trajectory_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_from</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">egress_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uncompressed_top_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">compressed_top_conf</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bullet_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">45</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">compression_ratio</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">clay_density</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">cycle_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">placed</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_rcf/fab_data/clay_objs.html#ClayBullet.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">45</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">compression_ratio</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">egress_frame_distance</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">trajectory_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_egress_to_top</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trajectory_top_to_compressed_top</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bullet_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">clay_density</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">cycle_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">placed</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_rcf/fab_data/clay_objs.html#ClayBullet.__init__"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -284,7 +317,7 @@ if key already present.</p></li>
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev62+g04d5968',
+  VERSION           : '0.3.1.dev63+g10ee84d',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',

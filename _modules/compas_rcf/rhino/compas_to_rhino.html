@@ -80,6 +80,7 @@
 
 <span class="kn">import</span> <span class="nn">compas</span>
 <span class="kn">import</span> <span class="nn">compas.geometry</span> <span class="k">as</span> <span class="nn">cg</span>
+<span class="kn">from</span> <span class="nn">compas_ghpython.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">Rhino</span>
@@ -194,6 +195,12 @@
     <span class="k">return</span> <span class="n">rgM</span></div>
 
 
+<span class="k">def</span> <span class="nf">cgmesh_to_rgmesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+    <span class="n">artist</span> <span class="o">=</span> <span class="n">MeshArtist</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">artist</span><span class="o">.</span><span class="n">draw_mesh</span><span class="p">()</span>
+
+
 <span class="k">def</span> <span class="nf">_test_functions</span><span class="p">():</span>
     <span class="c1"># test cgpoint_to_rgpoint</span>
     <span class="n">point</span> <span class="o">=</span> <span class="n">cgpoint_to_rgpoint</span><span class="p">(</span><span class="n">cg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -299,7 +306,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev62+g04d5968',
+  VERSION           : '0.3.1.dev63+g10ee84d',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
