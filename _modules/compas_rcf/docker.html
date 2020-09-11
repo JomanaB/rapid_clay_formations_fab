@@ -182,9 +182,7 @@
         <span class="n">file_args</span> <span class="o">+=</span> <span class="s2">&quot;--file </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_path</span><span class="p">)</span>
 
     <span class="n">cmd_str</span> <span class="o">=</span> <span class="s2">&quot;docker-compose </span><span class="si">{}</span><span class="s2"> up --detach&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_args</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">cmd_str</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd_str</span><span class="p">,</span> <span class="n">posix</span><span class="o">=</span><span class="s2">&quot;win&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Env vars: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">env_vars</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">ignore_orphans</span><span class="p">:</span>
@@ -201,7 +199,6 @@
         <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--remove-orphans&quot;</span><span class="p">)</span>
 
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Command to run: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Command to run: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
 
     <span class="n">_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">run_kwargs</span><span class="p">)</span></div>
 
@@ -341,7 +338,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev84+g214019a',
+  VERSION           : '0.3.1.dev85+g2c1e3c2',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
