@@ -48,8 +48,10 @@
         <li class="nav-item active"><a class="nav-link" href="">compas_rcf</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/tetov/compas_rcf" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -60,8 +62,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -79,8 +81,8 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">compas_rcf.fab_data</span> <span class="kn">import</span> <span class="n">ClayBullet</span>
 
@@ -122,60 +124,27 @@
 
         <span class="n">clay_bullets</span> <span class="o">=</span> <span class="n">load_bullets</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
 
-        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;radius (mm)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;height (mm)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;compression-height-ratio&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;density (kg/l)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;cycle_time (s)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;time placed (in UTC)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;location (xyz in mm)&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;weight (kg)&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="n">headers_attrs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;bullet_id&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;radius (mm)&quot;</span><span class="p">,</span> <span class="s2">&quot;radius&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;height (mm)&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;compression-height-ratio&quot;</span><span class="p">,</span> <span class="s2">&quot;compression_ratio&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;density (kg/l)&quot;</span><span class="p">,</span> <span class="s2">&quot;density&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;cycle time (s)&quot;</span><span class="p">,</span> <span class="s2">&quot;cycle_time&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;time placed (from epoch)&quot;</span><span class="p">,</span> <span class="s2">&quot;placed&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;location frame&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="k">with</span> <span class="n">csv_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
             <span class="n">csv_w</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
-            <span class="n">csv_w</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+            <span class="n">csv_w</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">headers_attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
             <span class="k">for</span> <span class="n">bullet</span> <span class="ow">in</span> <span class="n">clay_bullets</span><span class="p">:</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
-
-                <span class="c1"># get bullet_id or id</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">bullet_id</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">compression_ratio</span><span class="p">)</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">bullet</span><span class="o">.</span><span class="n">density</span><span class="p">:</span>
-                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">density</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">])</span>
-                    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">cycle_time</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">bullet</span><span class="o">.</span><span class="n">placed</span><span class="p">:</span>
-                    <span class="n">time_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">placed</span><span class="p">)</span>
-                    <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_obj</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_str</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-
-                <span class="n">pt_fmt</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">bullet</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">point</span><span class="p">))</span>
-
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bullet</span><span class="o">.</span><span class="n">get_weight_kg</span><span class="p">())</span>
-
-                <span class="n">csv_w</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></div>
+                <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">headers_attrs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">bullet</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="load_bullets"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.load_bullets.html#compas_rcf.fab_data.load_bullets">[docs]</a><span class="k">def</span> <span class="nf">load_bullets</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
@@ -277,7 +246,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev78+gee02ea7',
+  VERSION           : '0.3.1.dev79+geae7ea7',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
@@ -307,6 +276,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   
