@@ -85,6 +85,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">compas_rcf.fab_data</span> <span class="kn">import</span> <span class="n">ClayBullet</span>
+<span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">CompasObjEncoder</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -147,29 +148,143 @@
                     <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">bullet</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="load_bullets"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.load_bullets.html#compas_rcf.fab_data.load_bullets">[docs]</a><span class="k">def</span> <span class="nf">load_bullets</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_load_run_data</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">run_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">run_data</span>
+
+
+<span class="k">def</span> <span class="nf">_get_fab_data</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">dict_</span> <span class="o">=</span> <span class="n">path_or_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dict_</span> <span class="o">=</span> <span class="n">_load_run_data</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dict_</span><span class="p">[</span><span class="s2">&quot;fab_data&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">load_fabrication_elements</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load fabrication data from JSON file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    file_path : :class:`os.PathLike` or :class:`str`</span>
-<span class="sd">        JSON file to load data from.</span>
+<span class="sd">    path_or_dict : :class:`os.PathLike` or :obj:`dict`</span>
+<span class="sd">        Path to JSON representation or dictionary representation of fabrication</span>
+<span class="sd">        element.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    :class:`list` of :class:`ClayBullet`</span>
+<span class="sd">    :obj:`list` of :class:`ClayBullet`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">run_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+    <span class="n">fab_data</span> <span class="o">=</span> <span class="n">_get_fab_data</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">)</span>
 
-    <span class="c1"># Accept either run_data file or fab_data file</span>
-    <span class="n">fab_data</span> <span class="o">=</span> <span class="n">run_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fab_data&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">run_data</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ClayBullet</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">fab_data</span><span class="p">]</span>
 
-    <span class="n">clay_cylinders</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">fab_data</span><span class="p">:</span>
-        <span class="n">clay_cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClayBullet</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">clay_cylinders</span></div>
+<div class="viewcode-block" id="load_bullets"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.load_bullets.html#compas_rcf.fab_data.load_bullets">[docs]</a><span class="k">def</span> <span class="nf">load_bullets</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;load_bullets will be removed in the future.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">load_fabrication_elements</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_average_cycle_time</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">):</span>
+    <span class="n">cylinders</span> <span class="o">=</span> <span class="n">load_fabrication_elements</span><span class="p">(</span><span class="n">path_or_dict</span><span class="p">)</span>
+
+    <span class="n">sum_</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cylinder</span> <span class="ow">in</span> <span class="n">cylinders</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cylinder</span><span class="o">.</span><span class="n">cycle_time</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">sum_</span> <span class="o">+=</span> <span class="n">cylinder</span><span class="o">.</span><span class="n">cycle_time</span>
+
+    <span class="k">return</span> <span class="n">sum_</span> <span class="o">/</span> <span class="n">count</span>
+
+
+<span class="k">def</span> <span class="nf">mark_placed</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">from_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mark fabrication elemenets as placed in JSON file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : :class:`os.PathLike`</span>
+<span class="sd">    from_ : :obj:`int`, optional</span>
+<span class="sd">        Defines lower bound of element index to mark (inclusive).</span>
+<span class="sd">    to : :obj:`int`, optional</span>
+<span class="sd">        Defines upper bound of element index to mark (exclusive).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">update_fabdata_attrs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;bullet_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">from_</span><span class="o">=</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">renumber_fab_elements</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">run_data</span> <span class="o">=</span> <span class="n">_load_run_data</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">fab_elems</span> <span class="o">=</span> <span class="n">load_fabrication_elements</span><span class="p">(</span><span class="n">run_data</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fab_elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fab_elems</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">:</span>
+            <span class="n">fab_elem</span><span class="o">.</span><span class="n">bullet_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{:03d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fab_elem</span><span class="o">.</span><span class="n">bullet_id</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="n">run_data</span><span class="p">[</span><span class="s2">&quot;fab_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fab_elems</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">run_data</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CompasObjEncoder</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">update_fabdata_attrs</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">,</span> <span class="n">updated_attrs</span><span class="p">,</span> <span class="n">from_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reset_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update fabrication element&#39;s attributes in JSON file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : :class:`os.PathLike`</span>
+<span class="sd">    updated_attrs : :obj:`dict`</span>
+<span class="sd">        Dictionary of attribute names and new values.</span>
+<span class="sd">    from_ : :obj:`int`, optional</span>
+<span class="sd">        Defines lower bound of element index to mark (inclusive).</span>
+<span class="sd">    to : :obj:`int`, optional</span>
+<span class="sd">        Defines upper bound of element index to mark (exclusive).</span>
+<span class="sd">    reset_ids : :obj:`bool`, optional</span>
+<span class="sd">        If true will change the `bullet_id` attribute to be the same as the</span>
+<span class="sd">        element&#39;s index in list. Defaults to ``False``.</span>
+<span class="sd">    overwrite : :obj:`bool`, optional</span>
+<span class="sd">        Overwrite attributes. Defaults to ``False``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">run_data</span> <span class="o">=</span> <span class="n">_load_run_data</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">cylinders</span> <span class="o">=</span> <span class="n">load_fabrication_elements</span><span class="p">(</span><span class="n">run_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">from_</span><span class="p">:</span>
+        <span class="n">from_</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">to</span><span class="p">:</span>
+        <span class="n">to</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cylinders</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cylinder</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cylinders</span><span class="p">):</span>
+        <span class="n">modified</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">reset_ids</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Changing id from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cylinder</span><span class="o">.</span><span class="n">bullet_id</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">cylinder</span><span class="o">.</span><span class="n">bullet_id</span> <span class="o">=</span> <span class="n">i</span>
+
+        <span class="k">if</span> <span class="n">from_</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">to</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">updated_attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cylinder</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">cylinder</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="n">modified</span> <span class="o">|=</span> <span class="kc">True</span>  <span class="c1"># a fun OR gate</span>
+
+        <span class="k">if</span> <span class="n">modified</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Cylinder with index </span><span class="si">{}</span><span class="s2"> and id </span><span class="si">{}</span><span class="s2"> updated.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">cylinder</span><span class="o">.</span><span class="n">bullet_id</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Cylinder with index </span><span class="si">{}</span><span class="s2"> and id </span><span class="si">{}</span><span class="s2"> not updated.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">cylinder</span><span class="o">.</span><span class="n">bullet_id</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">run_data</span><span class="p">[</span><span class="s2">&quot;fab_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cylinders</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">run_data</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CompasObjEncoder</span><span class="p">)</span>
 </code></pre></div>
         
       </main>
@@ -246,7 +361,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev88+ge65df50',
+  VERSION           : '0.3.1.dev89+gbf52f1c',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
