@@ -102,19 +102,20 @@ conda activate compas_rcf
 <ul class="simple">
 <li><p>Using <a class="reference external" href="https://github.com/pypa/virtualenv">virtualenv</a></p></li>
 </ul>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>virtualenv --python<span class="o">=</span>python3.7 <span class="o">{{</span>path/to/venv<span class="o">}}</span>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>virtualenv --python<span class="o">=</span>python3.8 <span class="o">{{</span>path/to/venv<span class="o">}}</span>
 <span class="nb">source</span> <span class="o">{{</span>path/to/venv<span class="o">}}</span>/bin/activate
 </code></pre></div>
 </div>
 </li>
 <li><p>Install <code class="docutils literal notranslate"><span class="pre">compas_rrc</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">compas_rcf</span></code></p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span><span class="c1"># install compas_rrc separately</span>
-pip install git+https://bitbucket.org/ethrfl/compas_rrc@v0.2.3-pre
+pip install git+https://bitbucket.org/ethrfl/compas_rrc@v1.0.0
 <span class="c1"># from latest commit on git</span>
 pip install git+https://github.com/tetov/compas_rcf
 <span class="c1"># or last version</span>
 pip install compas_rcf
-<span class="c1"># or compas_rcf=={version} for specific version</span>
+<span class="c1"># or specific version</span>
+<span class="nv">compas_rcf</span><span class="o">=={</span>version<span class="o">}</span>
 </code></pre></div>
 </div>
 <p>If you have authentication issues with BitBucket (for compas_rrc), see <a class="reference internal" href="known_issues.html#git-cred-windows"><span class="std std-ref">Authentication problems with BitBucket</span></a></p>
@@ -219,7 +220,7 @@ pip install -U git+https://github.com/tetov/compas_rcf
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev91+g93970ff',
+  VERSION           : '0.3.1.dev92+g1639089',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
