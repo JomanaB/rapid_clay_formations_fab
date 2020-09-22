@@ -174,8 +174,10 @@
 <span class="sd">    :class:`Rhino.Geometry.Plane`</span>
 <span class="sd">        Resulting plane.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plane</span> <span class="o">=</span> <span class="n">cg</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">point</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cgplane_to_rgplane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">cgpoint_to_rgpoint</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">cgvector_to_rgvector</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">cgvector_to_rgvector</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">yaxis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rg</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="matrix_to_rgtransform"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.rhino.matrix_to_rgtransform.html#compas_rcf.rhino.matrix_to_rgtransform">[docs]</a><span class="k">def</span> <span class="nf">matrix_to_rgtransform</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
@@ -308,7 +310,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev98+g43e67db',
+  VERSION           : '0.3.1.dev99+gd9dd8cc',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
