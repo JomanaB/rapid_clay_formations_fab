@@ -111,7 +111,7 @@ but most are set before a run in YAML format. Here is the default config:</p>
     <span class="nt">publish_tf_xform</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>  <span class="c1"># publish a TF topic w xform</span>
     <span class="nt">wobjs</span><span class="p">:</span>
         <span class="nt">pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wobj0</span>
-        <span class="nt">place</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ob_A057_WobjPlacing01</span>
+        <span class="nt">place</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wobj0</span>
 
     <span class="nt">tools</span><span class="p">:</span>
         <span class="nt">pick_place</span><span class="p">:</span>
@@ -121,7 +121,7 @@ but most are set before a run in YAML format. Here is the default config:</p>
             <span class="nt">retract_signal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># state (0 or 1)</span>
             <span class="nt">needles_pause</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span> <span class="c1"># Seconds to wait before and after extending or</span>
                                <span class="c1"># retracting needles</span>
-            <span class="nt">compress_at_pick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.05</span> <span class="c1"># controls compression before lifting</span>
+            <span class="nt">elem_pick_egress_dist</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">150</span> <span class="c1"># controls height where descent for pick starts</span>
 
         <span class="nt">dist_sensor</span><span class="p">:</span>
             <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_A057_DistSensor01</span> <span class="c1"># name of tool</span>
@@ -278,7 +278,7 @@ but most are set before a run in YAML format. Here is the default config:</p>
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev111+gdae2883',
+  VERSION           : '0.3.1.dev121+g1c716c8',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
