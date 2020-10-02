@@ -92,7 +92,6 @@
 <span class="kn">from</span> <span class="nn">compas_ghpython.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
 <span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reverse_trajectory</span>
-<span class="kn">from</span> <span class="nn">compas_rcf.sensing</span> <span class="kn">import</span> <span class="n">ClayCylinderMeasurement</span>
 <span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">wrap_list</span>
 
 
@@ -153,7 +152,6 @@
         <span class="n">cycle_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">placed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">time_placed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">measurements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
@@ -435,7 +433,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`Rhino.Geometry.Mesh`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO: Rewrite as pure compas</span>
+        <span class="c1"># TODO: Rewrite as pure compas (unnecessary but neat)</span>
         <span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
 
         <span class="kn">from</span> <span class="nn">compas_rcf.rhino</span> <span class="kn">import</span> <span class="n">cgvector_to_rgvector</span>
@@ -526,7 +524,8 @@
 
 <div class="viewcode-block" id="ClayBullet.to_data"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.to_data.html#compas_rcf.fab_data.ClayBullet.to_data">[docs]</a>    <span class="k">def</span> <span class="nf">to_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get :obj:`dict` representation of :class:`ClayBullet`.&quot;&quot;&quot;</span>
-        <span class="c1"># TODO: Check if this is at all needed, or can be done just using</span>
+        <span class="c1"># TODO: Remove method. #62 blocks.</span>
+        <span class="c1"># Check if this is at all needed, or can be done just using</span>
         <span class="c1"># CompasObjEncoder</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -552,7 +551,7 @@
 <span class="sd">        :class:`ClayBullet`</span>
 <span class="sd">            The constructed ClayBullet instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO: Trajectories class</span>
+
         <span class="k">def</span> <span class="nf">trajectory_from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">JointTrajectory</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">)</span>
@@ -582,14 +581,6 @@
                 <span class="n">attr_keyword</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;^_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 
                 <span class="n">kwargs</span><span class="p">[</span><span class="n">attr_keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory_from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">)</span>
-
-        <span class="n">measurements</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;measurements&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">measurements</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;measurements&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">measurements</span><span class="p">:</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;measurements&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">ClayCylinderMeasurement</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span>
-                <span class="p">)</span>
 
         <span class="c1"># merge kwargs with data</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -696,7 +687,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev123+g551c1f9',
+  VERSION           : '0.3.1.dev126+gee8f998',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',

@@ -122,7 +122,7 @@
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="c1"># TODO: Get check_call to work</span>
+        <span class="c1"># TODO: Get check_call to work. Tracked in #61</span>
         <span class="c1"># if check_output:</span>
         <span class="c1">#     try:</span>
         <span class="c1">#         subprocess.check_call(cmd, universal_newlines=print_output, **kwargs)</span>
@@ -338,7 +338,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev123+g551c1f9',
+  VERSION           : '0.3.1.dev126+gee8f998',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
