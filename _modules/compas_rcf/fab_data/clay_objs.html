@@ -91,7 +91,7 @@
 <span class="kn">from</span> <span class="nn">compas_fab.robots</span> <span class="kn">import</span> <span class="n">JointTrajectory</span>
 <span class="kn">from</span> <span class="nn">compas_ghpython.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
-<span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reverse_trajectory</span>
+<span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reversed_trajectory</span>
 <span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">wrap_list</span>
 
 
@@ -202,7 +202,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trajectory_segment_egress_to_pick_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_segment_egress_to_pick_egress</span> <span class="ow">or</span> <span class="n">reverse_trajectory</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_segment_egress_to_pick_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_pick_egress_to_segment_egress</span>
         <span class="p">)</span>
 
@@ -213,7 +213,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trajectory_place_egress_to_segment_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_place_egress_to_segment_egress</span> <span class="ow">or</span> <span class="n">reverse_trajectory</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_place_egress_to_segment_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_segment_egress_to_place_egress</span>
         <span class="p">)</span>
 
@@ -224,7 +224,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trajectory_top_to_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_egress</span> <span class="ow">or</span> <span class="n">reverse_trajectory</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_egress_to_top</span>
         <span class="p">)</span>
 
@@ -235,7 +235,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trajectory_compressed_top_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_compressed_top_to_top</span> <span class="ow">or</span> <span class="n">reverse_trajectory</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_compressed_top_to_top</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_compressed_top</span>
         <span class="p">)</span>
 
@@ -687,7 +687,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev126+gee8f998',
+  VERSION           : '0.3.1.dev128+g3cabb85',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
