@@ -91,7 +91,7 @@
 <span class="kn">from</span> <span class="nn">compas_fab.robots</span> <span class="kn">import</span> <span class="n">JointTrajectory</span>
 <span class="kn">from</span> <span class="nn">compas_ghpython.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
-<span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reversed_trajectory</span>
+<span class="kn">from</span> <span class="nn">compas_rcf.robots</span> <span class="kn">import</span> <span class="n">reversed_trajectories</span>
 <span class="kn">from</span> <span class="nn">compas_rcf.utils</span> <span class="kn">import</span> <span class="n">wrap_list</span>
 
 
@@ -102,10 +102,15 @@
 <span class="sd">    ----------</span>
 <span class="sd">    location : :class:`Rhino.Geometry.Plane` or :class:`compas.geometry.Frame`</span>
 <span class="sd">        Bottom centroid frame of clay volume.</span>
-<span class="sd">    trajectory_to : :class:`list` of :class:`Rhino.Geometry.Plane` or :class:`compas.geometry.Frame`</span>
-<span class="sd">        Frames defining path to take to place location.</span>
-<span class="sd">    trajectory_from : :class:`list` of :class:`Rhino.Geometry.Plane` or :class:`compas.geometry.Frame`</span>
-<span class="sd">        Frames defining path from place location to pick location.</span>
+<span class="sd">    travel_trajectories : :obj:`list` of :class:`compas_fab.robots.JointTrajectory`</span>
+<span class="sd">        List of trajectories describing motion between picking egress and</span>
+<span class="sd">        placing egress.</span>
+<span class="sd">    place_trajectories : :obj:`list` of :class:`compas_fab.robots.JointTrajectory`</span>
+<span class="sd">        List of trajectories describing place motion.</span>
+<span class="sd">    return_travel_trajectories : :obj:`list` of :class:`compas_fab.robots.JointTrajectory`</span>
+<span class="sd">        List of trajectories describing motion between placing and picking.</span>
+<span class="sd">    return_place_trajectories : :obj:`list` of :class:`compas_fab.robots.JointTrajectory`</span>
+<span class="sd">        List of trajectories describing return motion from last compression motion to placing egress.</span>
 <span class="sd">    bullet_id : :class:`int`, optional</span>
 <span class="sd">        Unique identifier.</span>
 <span class="sd">    radius : :class:`float`, optional</span>
@@ -139,14 +144,10 @@
         <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">compression_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="n">egress_frame_distance</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-        <span class="n">trajectory_pick_egress_to_segment_egress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_segment_egress_to_pick_egress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_segment_egress_to_place_egress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_place_egress_to_segment_egress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_egress_to_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_top_to_egress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_top_to_compressed_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">trajectory_compressed_top_to_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">travel_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">place_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_travel_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_place_trajectories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">bullet_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">clay_density</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
         <span class="n">cycle_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -164,25 +165,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">compression_ratio</span> <span class="o">=</span> <span class="n">compression_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">egress_frame_distance</span> <span class="o">=</span> <span class="n">egress_frame_distance</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_pick_egress_to_segment_egress</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">trajectory_pick_egress_to_segment_egress</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_segment_egress_to_pick_egress</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">trajectory_segment_egress_to_pick_egress</span>
-        <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_segment_egress_to_place_egress</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">trajectory_segment_egress_to_place_egress</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_place_egress_to_segment_egress</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">trajectory_place_egress_to_segment_egress</span>
-        <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_egress_to_top</span> <span class="o">=</span> <span class="n">trajectory_egress_to_top</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_egress</span> <span class="o">=</span> <span class="n">trajectory_top_to_egress</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_compressed_top</span> <span class="o">=</span> <span class="n">trajectory_top_to_compressed_top</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_compressed_top_to_top</span> <span class="o">=</span> <span class="n">trajectory_compressed_top_to_top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">travel_trajectories</span> <span class="o">=</span> <span class="n">travel_trajectories</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">place_trajectories</span> <span class="o">=</span> <span class="n">place_trajectories</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_travel_trajectories</span> <span class="o">=</span> <span class="n">return_travel_trajectories</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_place_trajectories</span> <span class="o">=</span> <span class="n">return_place_trajectories</span>
 
         <span class="c1"># sortable ID, used for fabrication sequence</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bullet_id</span><span class="p">:</span>
@@ -200,48 +186,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">trajectory_segment_egress_to_pick_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_segment_egress_to_pick_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_pick_egress_to_segment_egress</span>
+    <span class="k">def</span> <span class="nf">return_travel_trajectories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_travel_trajectories_</span> <span class="ow">or</span> <span class="n">reversed_trajectories</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">travel_trajectories</span>
         <span class="p">)</span>
 
-    <span class="nd">@trajectory_segment_egress_to_pick_egress</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">trajectory_segment_egress_to_pick_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_segment_egress_to_pick_egress</span> <span class="o">=</span> <span class="n">trajectory</span>
+    <span class="nd">@return_travel_trajectories</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">return_travel_trajectories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_travel_trajectories_</span> <span class="o">=</span> <span class="n">trajectories</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">trajectory_place_egress_to_segment_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_place_egress_to_segment_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_segment_egress_to_place_egress</span>
+    <span class="k">def</span> <span class="nf">return_place_trajectories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_place_trajectories_</span> <span class="ow">or</span> <span class="n">reversed_trajectories</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">place_trajectories</span>
         <span class="p">)</span>
 
-    <span class="nd">@trajectory_place_egress_to_segment_egress</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">trajectory_place_egress_to_segment_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_place_egress_to_segment_egress</span> <span class="o">=</span> <span class="n">trajectory</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">trajectory_top_to_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_egress</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_egress_to_top</span>
-        <span class="p">)</span>
-
-    <span class="nd">@trajectory_top_to_egress</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">trajectory_top_to_egress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_top_to_egress</span> <span class="o">=</span> <span class="n">trajectory</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">trajectory_compressed_top_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`compas_fab.robots.JointTrajectory` or :obj:`list` of :class:`compas.geometry.Frame`.&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_compressed_top_to_top</span> <span class="ow">or</span> <span class="n">reversed_trajectory</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory_top_to_compressed_top</span>
-        <span class="p">)</span>
-
-    <span class="nd">@trajectory_compressed_top_to_top</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">trajectory_compressed_top_to_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory_compressed_top_to_top</span> <span class="o">=</span> <span class="n">trajectory</span>
+    <span class="nd">@return_place_trajectories</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">return_place_trajectories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectories</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_place_trajectories_</span> <span class="o">=</span> <span class="n">trajectories</span>
 
 <div class="viewcode-block" id="ClayBullet.get_location_plane"><a class="viewcode-back" href="../../../reference/generated/compas_rcf.fab_data.ClayBullet.get_location_plane.html#compas_rcf.fab_data.ClayBullet.get_location_plane">[docs]</a>    <span class="k">def</span> <span class="nf">get_location_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get location as Rhino.Geometry.Plane.</span>
@@ -563,24 +525,22 @@
         <span class="n">location</span> <span class="o">=</span> <span class="n">Frame</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">))</span>
 
         <span class="n">trajectory_attributes</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;trajectory_pick_egress_to_segment_egress&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;_trajectory_segment_egress_to_pick_egress&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;trajectory_segment_egress_to_place_egress&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;_trajectory_place_egress_to_segment_egress&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;trajectory_egress_to_top&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;_trajectory_top_to_egress&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;trajectory_top_to_compressed_top&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;_trajectory_compressed_top_to_top&quot;</span>
+            <span class="s2">&quot;travel_trajectories&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;place_trajectories&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;return_travel_trajectories_&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;return_place_trajectories_&quot;</span>
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">trajectory_attributes</span><span class="p">:</span>
-            <span class="n">traj_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">trajectories_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">traj_data</span><span class="p">:</span>
-                <span class="c1"># strip leading underscore</span>
-                <span class="n">attr_keyword</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;^_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">trajectories_data</span><span class="p">:</span>
+                <span class="n">keyword</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;_$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>  <span class="c1"># Strip underscore from end of key</span>
+                <span class="n">trajectories</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">traj_data</span> <span class="ow">in</span> <span class="n">trajectories_data</span><span class="p">:</span>
+                    <span class="n">trajectories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trajectory_from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">))</span>
 
-                <span class="n">kwargs</span><span class="p">[</span><span class="n">attr_keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory_from_data</span><span class="p">(</span><span class="n">traj_data</span><span class="p">)</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectories</span>
 
         <span class="c1"># merge kwargs with data</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -687,7 +647,7 @@
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.1.dev130+g03bcaca',
+  VERSION           : '0.3.1.dev138+gce8df7a',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
