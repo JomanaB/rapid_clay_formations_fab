@@ -38,7 +38,7 @@ jobs:
         name: Install
         run: |
           python -m pip install --no-cache-dir -e .[dev]
-          python -c "from setuptools_scm import get_version;get_version('.', write_to='src/compas_rcf/_version.py')"
+          python -c "from setuptools_scm import get_version;get_version('.', write_to='src/rapid_clay_formations_fab/_version.py')"
       -
         name: Test
         run: |
