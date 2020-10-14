@@ -32,7 +32,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install cython --install-option="--no-cython-compile"
-          echo -e "Host bitbucket.org\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+          mkdir ~/.ssh && ssh-keyscan -t rsa bitbucket.org >> ~/.ssh/known_hosts
           pip install git+https://"$RRC_USERNAME":"$RRC_PASSWORD"@bitbucket.org/ethrfl/compas_rrc.git@"$COMPAS_RRC_VER"#egg=compas_rrc
       -
         name: Install
