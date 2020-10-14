@@ -1,4 +1,4 @@
-name: publish_pypi
+name: Build and publish package and docs
 
 on:
   push:
@@ -53,18 +53,22 @@ jobs:
           invoke docs
 
   publish_docs:
-    name: Publish docs
-    needs: build
-    uses: crazy-max/ghaction-github-pages@v2
-    with:
-      target_branch: gh-pages
-      build_dir: build/docs
+    steps:
+      -
+        name: Publish docs
+        needs: build
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: build/docs
 
   publish_pypi:
-    name: Publish package
-    needs: build
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    uses: pypa/gh-action-pypi-publish@master
-    with:
-      user: __token__
-      password: ${{ secrets.pypi_password }}
+    steps:
+      -
+        name: Publish package
+        needs: build
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
