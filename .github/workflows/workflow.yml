@@ -53,20 +53,22 @@ jobs:
           invoke docs
 
   publish_docs:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       -
         name: Publish docs
-        needs: build
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
           build_dir: build/docs
 
   publish_pypi:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       -
         name: Publish package
-        needs: build
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
         with:
