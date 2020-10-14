@@ -1,0 +1,64 @@
+name: publish_pypi
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: install
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout repo
+        uses: actions/checkout@v2
+
+      -
+        name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      -
+        name: Install dependencies
+        env:
+          COMPAS_RRC_VER: v1.0.0
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install cython --install-option="--no-cython-compile"
+          pip install git+https://$bitbucket_uname:$bitbucket_passw@bitbucket.org/ethrfl/compas_rrc.git@$COMPAS_RRC_VER#egg=compas_rrc
+      -
+        name: Install
+        run: |
+          python -m pip install --no-cache-dir -e .[dev]
+          python -c "from setuptools_scm import get_version;get_version('.', write_to='src/compas_rcf/_version.py')"
+      -
+        name: Test
+        run: |
+          invoke test
+      -
+        name: Build
+        run: |
+          python setup.py clean --all sdist bdist_wheel
+      -
+        name: Build docs
+        run: |
+          invoke docs
+      -
+        name: Publish docs
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: build/docs
+      -
+        name: Publish package
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && ${{ success() }}
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
