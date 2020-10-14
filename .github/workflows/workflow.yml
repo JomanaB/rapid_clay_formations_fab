@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: install
+    name: Install and build
     runs-on: ubuntu-latest
     steps:
       -
@@ -27,10 +27,13 @@ jobs:
         name: Install dependencies
         env:
           COMPAS_RRC_VER: v1.0.0
+          RRC_USERNAME: ${{ secrets.rrc_username }}
+          RRC_PASSWORD: ${{ secrets.rrc_password }}
         run: |
           python -m pip install --upgrade pip
           python -m pip install cython --install-option="--no-cython-compile"
-          pip install git+https://$bitbucket_uname:$bitbucket_passw@bitbucket.org/ethrfl/compas_rrc.git@$COMPAS_RRC_VER#egg=compas_rrc
+          echo -e "Host bitbucket.org\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+          pip install git+https://"$RRC_USERNAME":"$RRC_PASSWORD"@bitbucket.org/ethrfl/compas_rrc.git@"$COMPAS_RRC_VER"#egg=compas_rrc
       -
         name: Install
         run: |
@@ -48,17 +51,20 @@ jobs:
         name: Build docs
         run: |
           invoke docs
-      -
-        name: Publish docs
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: build/docs
-      -
-        name: Publish package
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && ${{ success() }}
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
+
+  publish_docs:
+    name: Publish docs
+    needs: build
+    uses: crazy-max/ghaction-github-pages@v2
+    with:
+      target_branch: gh-pages
+      build_dir: build/docs
+
+  publish_pypi:
+    name: Publish package
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    uses: pypa/gh-action-pypi-publish@master
+    with:
+      user: __token__
+      password: ${{ secrets.pypi_password }}
